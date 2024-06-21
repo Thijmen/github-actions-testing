@@ -20,3 +20,20 @@ services:
     volumes:
       - .:/var/www/html/:cached
       - /var/run/docker.sock:/var/run/docker.sock
+  db:
+    pull_policy: always
+    ports:
+      - "${FORWARD_DB_PORT:-5432}:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: "${DB_USERNAME:-user}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD:-password}"
+      POSTGRES_DB: "${DB_DATABASE:-database}"
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+      - db-data-dev:/var/lib/postgresql/data
+
+
+volumes:
+  db-data-dev:
