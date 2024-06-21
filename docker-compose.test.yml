@@ -5,6 +5,18 @@ services:
       dockerfile: ./docker/dev/Dockerfile
     ports:
       - "${APP_PORT:-8000}:80"
+    environment:
+      PUID: "${USERID:-1000}"
+      PGID: "${GROUPID:-1000}"
+      SSL_MODE: "off"
+      AUTORUN_LARAVEL_STORAGE_LINK: "false"
+      AUTORUN_LARAVEL_MIGRATION: "false"
+      PUSHER_HOST: "${PUSHER_HOST}"
+      PUSHER_PORT: "${PUSHER_PORT}"
+      PUSHER_SCHEME: "${PUSHER_SCHEME:-http}"
+      PUSHER_APP_ID: "${PUSHER_APP_ID:-coolify}"
+      PUSHER_APP_KEY: "${PUSHER_APP_KEY:-coolify}"
+      PUSHER_APP_SECRET: "${PUSHER_APP_SECRET:-coolify}"
     volumes:
       - .:/var/www/html/:cached
       - /var/run/docker.sock:/var/run/docker.sock
