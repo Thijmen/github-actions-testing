@@ -19,6 +19,8 @@ jobs:
       - name: Run composer install
         run: |
           docker compose -f ./docker-compose.yml -f ./docker-compose.test.yml exec app composer install
+      - name: Generate key
+        docker compose -f ./docker-compose.yml -f ./docker-compose.test.yml exec app php artisan key:generate
       - name: Run Laravel Tests
         run: |
           docker compose -f ./docker-compose.yml -f ./docker-compose.test.yml exec app php artisan test
