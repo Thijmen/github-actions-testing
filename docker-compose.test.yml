@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
+    ports:
+      - "${APP_PORT:-8000}:80"
+    volumes:
+      - .:/var/www/html/:cached
+      - /var/run/docker.sock:/var/run/docker.sock
