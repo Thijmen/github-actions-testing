@@ -11,7 +11,7 @@ jobs:
         uses: hoverkraft-tech/compose-action@v2.0.1
         with:
           compose-file: |
-            ./dockercompose.yml
+            ./docker-compose.yml
             ./docker-compose.test.yml
       - name: Run Laravel Tests
         run: |
