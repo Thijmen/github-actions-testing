@@ -2,17 +2,26 @@ name: GitHub Actions Demo Pullrequest
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: ['pull_request']
 jobs:
-  Explore-GitHub-Actions:
+  run-tests:
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
+      - uses: actions/checkout@v4
+      - name: Copy example env file
         run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+          cp .env.example .env
+      - name: Start Docker Compose
+        uses: hoverkraft-tech/compose-action@v2.0.1
+        with:
+          compose-file: |
+            ./docker-compose.yml
+            ./docker-compose.test.yml
+      - name: Run composer install
+        run: |
+          docker compose -f ./docker-compose.yml -f ./docker-compose.test.yml exec app composer install
+      - name: Generate key
+        run: |
+          docker compose -f ./docker-compose.yml -f ./docker-compose.test.yml exec app php artisan key:generate
+      - name: Run Laravel Tests
+        run: |
+          docker compose -f ./docker-compose.yml -f ./docker-compose.test.yml exec app php artisan test
